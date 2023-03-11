@@ -107,6 +107,7 @@ public class JobTypeManager {
     }
   }
 
+  // 默认job类型 command javaprocess noop
   private void loadDefaultTypes(final JobTypePluginSet plugins)
       throws JobTypeManagerException {
     LOGGER.info("Loading plugin default job types");

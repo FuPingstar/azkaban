@@ -322,6 +322,8 @@ public class FlowRunner extends EventHandler<Event> implements Runnable {
         this.executorService = Executors.newFixedThreadPool(this.numJobThreads,
             new ThreadFactoryBuilder().setNameFormat("azk-job-pool-%d").build());
       }
+      // 设置公共execution参数
+      // flow inputoptions
       setupFlowExecution();
       this.flow.setStartTime(System.currentTimeMillis());
 
@@ -1078,7 +1080,7 @@ public class FlowRunner extends EventHandler<Event> implements Runnable {
           this.flow.getExecutionId(), this.flow.getId(), this.flow.getFlowName()));
     }
 
-    final JobRunner runner = createJobRunner(node);
+    final JobRunner runner = createJobRunner(node);  // 封装 JobRunner
     this.logger.info("Submitting job '" + node.getNestedId() + "' to run.");
     try {
       // Job starts to queue

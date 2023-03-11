@@ -272,7 +272,7 @@ public abstract class AbstractExecutorManagerAdapter extends EventHandler implem
    * When a flow is submitted, insert a new execution into the database queue. {@inheritDoc}
    */
   @Override
-  public String submitExecutableFlow(final ExecutableFlow exflow, final String userId)
+  public String submitExecutableFlow(final ExecutableFlow exflow, final String userId)  //flow 执行入口
       throws ExecutorManagerException {
     if (exflow.isLocked()) {
       // Skip execution for locked flows.

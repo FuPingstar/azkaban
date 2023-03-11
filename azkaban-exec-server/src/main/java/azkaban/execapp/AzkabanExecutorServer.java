@@ -138,6 +138,7 @@ public class AzkabanExecutorServer implements IMBeanRegistrable {
 
     setSecurityPolicy();
 
+    // 加载 配置文件 azkaban.properties azkaban.private.properties
     final Props props = AzkabanServer.loadProps(args);
 
     if (props == null) {
@@ -186,12 +187,13 @@ public class AzkabanExecutorServer implements IMBeanRegistrable {
     AzkabanServer.setupTimeZone(azkabanExecutorServer.getAzkabanProps(), logger);
     app = azkabanExecutorServer;
 
+    // shutdown 钩子，主要用来打印资源利用情况
     Runtime.getRuntime().addShutdownHook(new Thread() {
 
       @Override
       public void run() {
         try {
-          logTopMemoryConsumers();
+          logTopMemoryConsumers();  // 打印资源利用情况（内存）
         } catch (final Exception e) {
           AzkabanExecutorServer.logger.info(("Exception when logging top memory consumers"), e);
         }
@@ -249,7 +251,7 @@ public class AzkabanExecutorServer implements IMBeanRegistrable {
     // make sure this happens before
     ServerUtils.configureJobCallback(logger, this.props);
 
-    configureMBeanServer();
+    configureMBeanServer();  // 注册 flowRunnerManager
     configureMetricReports();
 
     loadCustomJMXAttributeProcessor(this.props);

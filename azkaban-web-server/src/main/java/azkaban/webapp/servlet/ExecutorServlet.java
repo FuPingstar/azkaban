@@ -221,7 +221,7 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
       final String projectName = getParam(req, "project");
 
       ret.put("project", projectName);
-      if (API_EXECUTE_FLOW.equals(ajaxName)) {
+      if (API_EXECUTE_FLOW.equals(ajaxName)) { // 执行作业
         ajaxExecuteFlow(req, resp, ret, session.getUser());
       }
     }
@@ -984,6 +984,7 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     final String projectName = getParam(req, "project");
     final String flowId = getParam(req, "flow");
 
+    // 校验 project参数
     final Project project =
         getProjectAjaxByPermission(ret, projectName, user, Type.EXECUTE);
     if (project == null) {
@@ -992,6 +993,7 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     }
 
     ret.put("flow", flowId);
+    // 校验flow参数
     final Flow flow = project.getFlow(flowId);
     if (flow == null) {
       ret.put("error", "Flow '" + flowId + "' cannot be found in project " + project);

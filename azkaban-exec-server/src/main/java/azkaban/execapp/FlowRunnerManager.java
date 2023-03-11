@@ -459,6 +459,8 @@ public class FlowRunnerManager implements IFlowRunnerManager, EventListener<Even
   }
 
   private FlowRunner createFlowRunner(final int execId) throws ExecutorManagerException {
+
+    // 加载flow execution 参数 (会替换掉executionOptions 的覆盖参数)
     final ExecutableFlow flow = this.executorLoader.fetchExecutableFlow(execId);
     if (flow == null) {
       throw new ExecutorManagerException("Error loading flow with exec " + execId);
@@ -471,6 +473,7 @@ public class FlowRunnerManager implements IFlowRunnerManager, EventListener<Even
 
     try {
       if (this.active || isExecutorSpecified(flow)) {
+        // 设置 flow execution 对应目录
         this.flowPreparer.setup(flow);
       } else {
         // Unset the executor.
@@ -526,6 +529,7 @@ public class FlowRunnerManager implements IFlowRunnerManager, EventListener<Even
     this.flowRampManager
         .configure(flow, FileIOUtils.getDirectory(this.projectDirectory, flow.getDirectory()));
 
+    // 包装 flowRunner
     final FlowRunner runner =
         new FlowRunner(flow, this.executorLoader, this.projectLoader, this.jobtypeManager,
             this.azkabanProps, this.azkabanEventReporter, this.alerterHolder, this.commonMetrics,

@@ -613,7 +613,7 @@ public class ExecutorManager extends AbstractExecutorManagerAdapter {
 
   @Override
   public String submitExecutableFlow(final ExecutableFlow exflow, final String userId)
-      throws ExecutorManagerException {
+      throws ExecutorManagerException {   // flow 执行入口
     if (exflow.isLocked()) {
       // Skip execution for locked flows.
       final String message = String.format("Flow %s for project %s is locked.", exflow.getId(),

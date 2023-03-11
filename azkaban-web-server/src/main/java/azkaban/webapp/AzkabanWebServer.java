@@ -245,6 +245,7 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
     StdOutErrRedirect.redirectOutAndErrToLog();
 
     logger.info("Starting Jetty Azkaban Web Server...");
+    // 加载配置文件 azkaban.propertis azkaban.private.properties
     final Props props = AzkabanServer.loadProps(args);
 
     if (props == null) {
@@ -268,6 +269,7 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
 
     webServer.prepareAndStartServer();
 
+    // 添加 shutdownhook
     Runtime.getRuntime().addShutdownHook(new Thread() {
 
       @Override
@@ -290,6 +292,7 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
           AzkabanWebServer.logger.error("Exception while shutting down flow trigger service.", e);
         }
 
+        // 打印资源利用情况
         try {
           AzkabanWebServer.logger.info("Logging top memory consumers...");
           logTopMemoryConsumers();
@@ -435,6 +438,7 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
   }
 
   private void configureRoutes() throws TriggerManagerException {
+    // 构建 Context
     final Context root = new Context(this.server, "/", Context.SESSIONS);
     root.setMaxFormContentSize(MAX_FORM_CONTENT_SIZE);
     root.setAttribute(AZKABAN_SERVLET_CONTEXT_KEY, this);
@@ -443,6 +447,7 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
     logger.info("Setting up web resource dir " + staticDir);
     root.setResourceBase(staticDir);
 
+    // 添加静态资源路径
     final ServletHolder staticServlet = new ServletHolder(new DefaultServlet());
     root.addServlet(staticServlet, "/css/*");
     root.addServlet(staticServlet, "/js/*");
@@ -508,6 +513,7 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
     final String defaultServletPath =
         this.props.getString("azkaban.default.servlet.path", "/index");
 
+    // 添加动态资源路径对应 servlet
     final Map<String, AbstractAzkabanServlet> routesMap = new HashMap<>();
     routesMap.put("/index", new ProjectServlet());
     routesMap.put("/manager", new ProjectManagerServlet());
@@ -561,6 +567,7 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
     }
 
     try {
+      // 启动服务
       this.server.start();
       logger.info("Server started");
     } catch (final Exception e) {

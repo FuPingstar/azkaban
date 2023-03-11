@@ -680,6 +680,7 @@ public class JobRunner extends JobRunnerBase implements Runnable {
       }
       fireEvent(Event.create(this, EventType.JOB_STARTED, new EventData(this.node)));
 
+      // 根据类型反射获取Job
       if (prepareJob()) {
         // Writes status to the db
         writeStatus();
@@ -785,6 +786,7 @@ public class JobRunner extends JobRunnerBase implements Runnable {
       } else {
         this.props.put(AbstractProcessJob.WORKING_DIR, this.workingDir.getAbsolutePath());
       }
+      // 根据job的type参数获取JobType
       Optional<String> jobType = JobTypeManager.getJobType(this.props);
       Optional<String> effectiveUserOptional = determineEffectiveUser(jobType);
       // Fail if the effective user is not present
@@ -807,9 +809,11 @@ public class JobRunner extends JobRunnerBase implements Runnable {
 
       try {
         long jobCreationStartMillis = System.currentTimeMillis();
+        // 创建job实例所需参数
         final JobTypeManager.JobParams jobParams = this.jobtypeManager
             .createJobParams(this.jobId, this.props, this.logger);
         Thread.currentThread().setContextClassLoader(jobParams.contextClassLoader);
+        // 反射调用构造方法创建job实例
         this.job = JobTypeManager.createJob(this.jobId, jobParams, this.logger);
         this.logger.info(String.format("%s creation took %s milliseconds.",
             this.jobId, System.currentTimeMillis() - jobCreationStartMillis));
