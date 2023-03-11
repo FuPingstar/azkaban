@@ -15,6 +15,17 @@
  */
 apply plugin: 'c'
 model {
+    platforms {
+        x86_32 {
+            architecture "x86"
+        }
+        x86_64 {
+            architecture "x86_64"
+        }
+        osx_aarch64 {
+            architecture "arm64"
+        }
+    }
     components {
         main(NativeExecutableSpec) {
             sources {
